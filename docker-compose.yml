@@ -1,0 +1,13 @@
+services:
+  workflow-api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_PATH: /app/data/workflow.db
+    volumes:
+      - workflow_data:/app/data
+volumes:
+  workflow_data:
