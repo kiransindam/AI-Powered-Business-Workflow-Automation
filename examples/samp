@@ -1,7 +1,0 @@
-{
-  "name": "Avery Customer",
-  "email": "avery@example.com",
-  "subject": "Urgent issue with my order",
-  "message": "I cannot access the order status page. Could someone help me as soon as possible?",
-  "source": "website_form"
-}
