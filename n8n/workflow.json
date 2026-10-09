@@ -1,0 +1,93 @@
+{
+  "name": "AI Business Intake - API Processor",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "business-intake",
+        "responseMode": "usingRespondToWebhook",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Receive Business Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "ai-business-intake-demo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8000/process",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({name: $json.body.name, email: $json.body.email, subject: $json.body.subject, message: $json.body.message, source: 'n8n_webhook'}) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "2",
+      "name": "Classify and Save Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "3",
+      "name": "Return Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Receive Business Request": {
+      "main": [
+        [
+          {
+            "node": "Classify and Save Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify and Save Request": {
+      "main": [
+        [
+          {
+            "node": "Return Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b4e48c3a-1c6e-4e55-8b31-123456789abc",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
